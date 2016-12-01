@@ -116,7 +116,7 @@ public class MainActivity extends FragmentActivity
                 Double lat = loc.getLat();
                 Double lon = loc.getLon();
 
-                // down bellow, add "description" onto name, and pull that from the json
+                // down bellow, add "description" onto name, and pull that from the json.
                 LatLng resLoc = new LatLng(lat,lon);
                 mMap.addMarker(new MarkerOptions().position(resLoc).title(name));
                 Log.v("loc","info about loc: " + name + "," + lat + "," + lon);
