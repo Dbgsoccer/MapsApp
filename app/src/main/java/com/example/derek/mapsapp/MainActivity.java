@@ -19,6 +19,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -57,7 +58,7 @@ import java.io.InputStreamReader;
 //AIzaSyCVXCFkOIJkJO3GIBVtSZNMifrPg5XsgPc geocoder api key
 
 public class MainActivity extends FragmentActivity
-        implements OnMapReadyCallback {
+        implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap mMap;
     private String link = "https://spreadsheets.google.com/tq?key=1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k";
     String json = "";
@@ -89,7 +90,7 @@ public class MainActivity extends FragmentActivity
         //private String link ="https://docs.google.com/spreadsheets/d/1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k/edit#gid=0";
         private String link = "https://spreadsheets.google.com/tq?key=1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k";
         String result;
-        String name;
+        String name, desc, catag;
         Double lat, lon;
         ArrayList<Loc> locs = new ArrayList<Loc>();
 
@@ -115,11 +116,14 @@ public class MainActivity extends FragmentActivity
                 String name = loc.getName();
                 Double lat = loc.getLat();
                 Double lon = loc.getLon();
+                String desc = loc.getDesc();
+                String catag = loc.getCatag();
 
                 // down bellow, add "description" onto name, and pull that from the json.
                 LatLng resLoc = new LatLng(lat,lon);
-                mMap.addMarker(new MarkerOptions().position(resLoc).title(name));
-                Log.v("loc","info about loc: " + name + "," + lat + "," + lon);
+                mMap.addMarker(new MarkerOptions().position(resLoc).title(name).snippet(desc));
+
+                Log.v("loc","info about loc: " + name + "," + lat + "," + lon+","+ desc);
 
             }
         }
@@ -192,7 +196,9 @@ public class MainActivity extends FragmentActivity
                     name = rows.getJSONObject(i).getJSONArray("c").getJSONObject(0).getString("v");
                     lat = rows.getJSONObject(i).getJSONArray("c").getJSONObject(1).getDouble("v");
                     lon = rows.getJSONObject(i).getJSONArray("c").getJSONObject(2).getDouble("v");
-                    locs.add(new Loc(name,lat,lon));
+                    desc = rows.getJSONObject(i).getJSONArray("c").getJSONObject(3).getString("v");
+                    catag = rows.getJSONObject(i).getJSONArray("c").getJSONObject(4).getString("v");
+                    locs.add(new Loc(name,lat,lon,desc,catag));
                     //double resLoc = lat, lon;
                     //now make a marker based on name/lat/lon and add it to map
                    // HashMap resources = new HashMap<String, LatLng>();
@@ -224,6 +230,8 @@ public class MainActivity extends FragmentActivity
     public void onMapReady(GoogleMap googleMap) {
         //Geocoder geocoder = new Geocoder(this, Locale.US);
         mMap = googleMap;
+        mMap.setOnInfoWindowClickListener(this);
+
 
 
 
@@ -241,9 +249,17 @@ public class MainActivity extends FragmentActivity
         //mMap.addMarker(new MarkerOptions().position(waterville).title("Marker in Waterville"));
         LatLng cameraLoc = new LatLng(44.66899, -70.14638);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cameraLoc));
-        mMap.setMinZoomPreference(5);
+        mMap.setMinZoomPreference(8);
         //mMap.setMaxZoomPreference(1000);d
         }
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
+
+
+
+    }
+
        /* catch(IOException e) {
             Log.e("IOException", e.getMessage());
             Toast.makeText(this, "IOException:  " + e.getMessage(), 20).show();

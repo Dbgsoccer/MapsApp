@@ -9,16 +9,17 @@ public class Loc {
     Double lat;
     Double lon;
     String desc;
+    String catag;
 
-    public Loc(String n, Double la, Double lo) {
+    public Loc(String n, Double la, Double lo, String des, String cat) {
         name = n;
         lat = la;
         lon = lo;
+        desc = des;
+        catag = cat;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() {return name;}
 
     public Double getLat() {
         return lat;
@@ -27,4 +28,9 @@ public class Loc {
     public Double getLon() {
         return lon;
     }
+
+    public String getDesc()  {return desc;}
+
+    public String getCatag()  {return catag;}
+
 }
