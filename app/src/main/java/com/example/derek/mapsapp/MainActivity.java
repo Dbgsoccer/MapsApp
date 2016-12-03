@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 //import com.google.android.gms.identity.intents.Address;
@@ -55,7 +56,7 @@ import java.net.URL;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-//AIzaSyCVXCFkOIJkJO3GIBVtSZNMifrPg5XsgPc geocoder api key
+
 
 public class MainActivity extends FragmentActivity
         implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
@@ -72,6 +73,8 @@ public class MainActivity extends FragmentActivity
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
         downloadSheet();
+        //ListView resourceCatag = (ListView) findViewById(R.id.resourceCatag);
+       // void addHeaderView (resourceCatag, catagory,true);
     }
     public void downloadSheet() {
         try {
@@ -85,32 +88,22 @@ public class MainActivity extends FragmentActivity
 
 
     class DownloadThread extends AsyncTask<URL, Integer, String> {
-
-        //        String json;
-        //private String link ="https://docs.google.com/spreadsheets/d/1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k/edit#gid=0";
         private String link = "https://spreadsheets.google.com/tq?key=1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k";
         String result;
         String name, desc, catag;
         Double lat, lon;
+        String chosenCat = "Food"; //this is what will change based on what they choose
         ArrayList<Loc> locs = new ArrayList<Loc>();
+        ArrayList<String> dataCatag = new ArrayList<String>();
 
         protected String doInBackground(URL... urls) {
             return download();
         }
 
-        //Bellow I need to figure out how to make map markers
+
         @Override
         protected void onPostExecute(String result) {
-            /*
-            TextView txt = (TextView) findViewById(R.id.name);
-            txt.setText(name); // txt.setText(result);
-            TextView la = (TextView) findViewById(R.id.lat);
-            la.setText(lat); // txt.setText(result);
-            TextView lo = (TextView) findViewById(R.id.lon);
-            lo.setText(lon); // txt.setText(result);
-            // might want to change "executed" for the returned string passed
-            // into onPostExecute() but that is upto you
-            */
+
             for(int i=0;i<locs.size();i++) {
                 Loc loc = locs.get(i);
                 String name = loc.getName();
@@ -119,11 +112,23 @@ public class MainActivity extends FragmentActivity
                 String desc = loc.getDesc();
                 String catag = loc.getCatag();
 
-                // down bellow, add "description" onto name, and pull that from the json.
                 LatLng resLoc = new LatLng(lat,lon);
-                mMap.addMarker(new MarkerOptions().position(resLoc).title(name).snippet(desc));
+                // Iterate through resources to look for different catagories,
+                // if a idfferent catagory is found, place it into an arroy kist which will bult up a listview
+                if (dataCatag.contains(catag)){
+                    dataCatag.add(catag);
+                    Log.v("loc", "info about Catagories in Database: " + dataCatag.toString());
+                }
 
+
+                if(chosenCat.equals(catag)) {
+                        mMap.addMarker(new MarkerOptions().position(resLoc).title(name).snippet(desc));
+                }
+                Log.v("loc","info about catag: " + catag + "," + chosenCat);
                 Log.v("loc","info about loc: " + name + "," + lat + "," + lon+","+ desc);
+               /* for (int k=0; k<dataCatag.size(); ) {
+                    Log.v("dataCatag", "info about Catagories in Database: " + dataCatag.get(k));
+                }*/
 
             }
         }
@@ -144,7 +149,7 @@ public class MainActivity extends FragmentActivity
                 json = getString(stream);
                 parseJSON();
                 return json;
-                // json = parseJSON();
+
 
             } catch (Exception e) {
                 Log.v("io", "uh oh 1: " + e.toString());
@@ -215,15 +220,7 @@ public class MainActivity extends FragmentActivity
         }
 
 
-/*    protected void onProgressUpdate(Integer... progress) {
-        setProgressPercent(progress[0]);
-    }
-*/
-    /*
-    protected void onPostExecute(Long result) {
-        showDialog("Downloaded " + result + " bytes");
-    }
-    */
+
     }
 
     @Override
@@ -235,22 +232,15 @@ public class MainActivity extends FragmentActivity
 
 
 
-        //HashMap resources = new HashMap<String, LatLng>();
 
 
-       /* Iterator it = resources.entrySet().iterator();
-        while (it.hasNext()){
-            //Map.Entry pair = (Map.Entry)it.next();
-            LatLng temp1 = (LatLng) pair.getValue();
-            String temp2 = (String) pair.getKey();
-            mMap.addMarker(new MarkerOptions().position(temp1).title(temp2));
-        }*/
-        //mMap.addMarker(new MarkerOptions().position(farmington).title("Marker in Farminton"));
-        //mMap.addMarker(new MarkerOptions().position(waterville).title("Marker in Waterville"));
+
+
+
         LatLng cameraLoc = new LatLng(44.66899, -70.14638);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cameraLoc));
         mMap.setMinZoomPreference(8);
-        //mMap.setMaxZoomPreference(1000);d
+
         }
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -260,10 +250,7 @@ public class MainActivity extends FragmentActivity
 
     }
 
-       /* catch(IOException e) {
-            Log.e("IOException", e.getMessage());
-            Toast.makeText(this, "IOException:  " + e.getMessage(), 20).show();
-        }*/
+
 
     }
 
