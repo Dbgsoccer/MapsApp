@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.example.derek.mapsapp.R.id.map;
+import static com.example.derek.mapsapp.R.id.resourceCatag;
 import static com.google.android.gms.R.id.center;
 import android.app.Activity;
 import android.content.Intent;
@@ -63,6 +66,16 @@ public class MainActivity extends FragmentActivity
     private GoogleMap mMap;
     private String link = "https://spreadsheets.google.com/tq?key=1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k";
     String json = "";
+    ListView resourceCatag;
+    ArrayAdapter<String> adapter;
+    ArrayList<Loc> locs;
+    ArrayList<String> dataCatag;
+    //ArrayList<String> dataCatag = new ArrayList<String>();
+    //ArrayList<Loc> locs = new ArrayList<Loc>();
+    //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, dataCatag);
+
+    //ListView resourceCatag = (ListView) findViewById(R.id.resourceCatag);
+
 
 
     @Override
@@ -73,9 +86,25 @@ public class MainActivity extends FragmentActivity
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
         downloadSheet();
-        //ListView resourceCatag = (ListView) findViewById(R.id.resourceCatag);
+
+         dataCatag = new ArrayList<String>();
+         locs = new ArrayList<Loc>();
+        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, dataCatag);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, dataCatag);
+        resourceCatag = (ListView) findViewById(R.id.resourceCatag);
+
+       /* ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1, dataCatag);
+
+        ListView resourceCatag = (ListView) findViewById(R.id.resourceCatag);
+        */
+        resourceCatag.setAdapter(adapter);
+
        // void addHeaderView (resourceCatag, catagory,true);
+
+
+
     }
+
     public void downloadSheet() {
         try {
             new DownloadThread().execute(new URL(link));
@@ -87,14 +116,14 @@ public class MainActivity extends FragmentActivity
     }
 
 
-    class DownloadThread extends AsyncTask<URL, Integer, String> {
+     class DownloadThread extends AsyncTask<URL, Integer, String> {
         private String link = "https://spreadsheets.google.com/tq?key=1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k";
         String result;
         String name, desc, catag;
         Double lat, lon;
         String chosenCat = "Food"; //this is what will change based on what they choose
-        ArrayList<Loc> locs = new ArrayList<Loc>();
-        ArrayList<String> dataCatag = new ArrayList<String>();
+        //ArrayList<Loc> locs = new ArrayList<Loc>();
+        //ArrayList<String> dataCatag = new ArrayList<String>();
 
         protected String doInBackground(URL... urls) {
             return download();
@@ -111,27 +140,78 @@ public class MainActivity extends FragmentActivity
                 Double lon = loc.getLon();
                 String desc = loc.getDesc();
                 String catag = loc.getCatag();
+                //locs.add(new Loc(name,lat,lon,desc,catag));
 
-                LatLng resLoc = new LatLng(lat,lon);
+
+                //LatLng resLoc = new LatLng(lat,lon);
+
                 // Iterate through resources to look for different catagories,
                 // if a idfferent catagory is found, place it into an arroy kist which will bult up a listview
-                if (dataCatag.contains(catag)){
+                if (!dataCatag.contains(catag)){
                     dataCatag.add(catag);
-                    Log.v("loc", "info about Catagories in Database: " + dataCatag.toString());
+                    //adapter.clear();
+                    //adapter.addAll(dataCatag);
+                    //use dataCatag to populate listview
+                    Log.d("loc", "info about Categories in Database: " + dataCatag.toString());
                 }
 
 
-                if(chosenCat.equals(catag)) {
+               /* if(chosenCat.equals(catag)) {
                         mMap.addMarker(new MarkerOptions().position(resLoc).title(name).snippet(desc));
+                        Log.d("loc","added loc: " + catag + "," + chosenCat);
+
                 }
-                Log.v("loc","info about catag: " + catag + "," + chosenCat);
-                Log.v("loc","info about loc: " + name + "," + lat + "," + lon+","+ desc);
+                */
+                Log.d("loc","info about catag: " + catag + "," + chosenCat);
+                Log.d("loc","info about loc: " + name + "," + lat + "," + lon+","+ desc);
                /* for (int k=0; k<dataCatag.size(); ) {
                     Log.v("dataCatag", "info about Catagories in Database: " + dataCatag.get(k));
                 }*/
 
+
             }
+            Log.d("loc","one");
+            //ItemAdapter  adapter = new ItemAdapter (getApplicationContext(),dataCatag);
+            Log.d("loc","two");
+            //ListView listview = (ListView)   findViewById(R.id.resourceCatag);
+            Log.d("loc","three");
+            //resourceCatag.setAdapter(adapter);
+            Log.d("loc","four");
+            resourceCatag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    chosenCat = dataCatag.get(position);
+                    mMap.clear();
+                    LatLng cameraLoc = new LatLng(44.66899, -70.14638);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(cameraLoc));
+                    for (int i = 0; i < locs.size(); i++) {
+                        Loc loc = locs.get(i);
+                        String name = loc.getName();
+                        Double lat = loc.getLat();
+                        Double lon = loc.getLon();
+                        String desc = loc.getDesc();
+                        String catag = loc.getCatag();
+
+                        if (chosenCat.equals(catag)) {
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name).snippet(desc));
+                            Log.d("loc", "added loc: " + catag + "," + chosenCat);
+                        }
+                    }
+
+                }
+            });
+
+            //listview.adapter.notifyDataSetChanged();
+
+            //adapter.clear();
+            //adapter.addAll(dataCatag);
+            adapter.notifyDataSetChanged();
+            TextView t=(TextView)findViewById(R.id.textView2);
+            t.setText(dataCatag.toString());
+
         }
+
+
         private String download() {
             InputStream stream = null;
             try {
@@ -203,11 +283,13 @@ public class MainActivity extends FragmentActivity
                     lon = rows.getJSONObject(i).getJSONArray("c").getJSONObject(2).getDouble("v");
                     desc = rows.getJSONObject(i).getJSONArray("c").getJSONObject(3).getString("v");
                     catag = rows.getJSONObject(i).getJSONArray("c").getJSONObject(4).getString("v");
+                    Log.d("loc","info about catag: " + name);
+                    //this add function isnt working now, it says locs is null
                     locs.add(new Loc(name,lat,lon,desc,catag));
-                    //double resLoc = lat, lon;
+                    Log.d("loc","info about catag: " + desc);
+
                     //now make a marker based on name/lat/lon and add it to map
-                   // HashMap resources = new HashMap<String, LatLng>();
-                    //
+
 
                 }
             } catch (JSONException e) {
@@ -228,20 +310,11 @@ public class MainActivity extends FragmentActivity
         //Geocoder geocoder = new Geocoder(this, Locale.US);
         mMap = googleMap;
         mMap.setOnInfoWindowClickListener(this);
-
-
-
-
-
-
-
-
-
-        LatLng cameraLoc = new LatLng(44.66899, -70.14638);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(cameraLoc));
+      //  LatLng cameraLoc = new LatLng(44.66899, -70.14638);
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(cameraLoc));
         mMap.setMinZoomPreference(8);
 
-        }
+    }
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
