@@ -22,7 +22,6 @@
         android:layout_marginBottom="150dp" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -43,5 +42,16 @@
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
         android:layout_alignTop="@+id/textView2" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="105dp"
+        android:layout_marginEnd="105dp"
+        android:id="@+id/popupDesc" />
 
 </RelativeLayout>

@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 //import com.google.android.gms.identity.intents.Address;
@@ -35,8 +37,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.example.derek.mapsapp.R.id.activity_main;
 import static com.example.derek.mapsapp.R.id.map;
 import static com.example.derek.mapsapp.R.id.resourceCatag;
+import static com.example.derek.mapsapp.R.id.textView2;
 import static com.google.android.gms.R.id.center;
 import android.app.Activity;
 import android.content.Intent;
@@ -206,8 +210,9 @@ public class MainActivity extends FragmentActivity
             //adapter.clear();
             //adapter.addAll(dataCatag);
             adapter.notifyDataSetChanged();
-            TextView t=(TextView)findViewById(R.id.textView2);
-            t.setText(dataCatag.toString());
+
+            //TextView t=(TextView)findViewById(R.id.textView2);
+            //t.setText(dataCatag.toString());
 
         }
 
@@ -310,14 +315,25 @@ public class MainActivity extends FragmentActivity
         //Geocoder geocoder = new Geocoder(this, Locale.US);
         mMap = googleMap;
         mMap.setOnInfoWindowClickListener(this);
-      //  LatLng cameraLoc = new LatLng(44.66899, -70.14638);
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(cameraLoc));
+        LatLng cameraLoc = new LatLng(44.66899, -70.14638);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(cameraLoc));
         mMap.setMinZoomPreference(8);
 
     }
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
+        PopupWindow markerWindow= new PopupWindow(this);
+
+
+        TextView markerDesc=(TextView)findViewById(R.id.popupDesc);
+
+        markerDesc.setText(marker.getSnippet());
+        markerWindow.setContentView((markerDesc));
+        //markerWindow.showAtLocation(resourceCatag.removeView(res, Gravity.BOTTOM,50,50);
+        //markerWindow.setHeight(500);
+        //markerWindow.setWidth(200);
+
 
 
 
