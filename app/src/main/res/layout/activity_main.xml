@@ -10,39 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.derek.mapsapp.MainActivity">
 
-    <fragment
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@android:layout/activity_list_item"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="150dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="114dp"
-        android:id="@+id/textView2" />
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/resourceCatag"
-        android:background="@color/wallet_highlighted_text_holo_light"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_alignTop="@+id/textView2" />
-
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
@@ -52,6 +19,26 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="105dp"
         android:layout_marginEnd="105dp"
-        android:id="@+id/popupDesc" />
+        android:id="@+id/popupDesc"
+        android:visibility="visible" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:id="@+id/spinner2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/map"
+        android:layout_height="wrap_content" />
+
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@android:layout/activity_list_item"
+        android:layout_below="@+id/popupDesc"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="27dp" />
 
 </RelativeLayout>

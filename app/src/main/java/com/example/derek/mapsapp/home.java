@@ -10,7 +10,7 @@ import android.widget.ListView;
 import com.google.android.gms.maps.MapFragment;
 
 import static com.example.derek.mapsapp.R.id.map;
-import static com.example.derek.mapsapp.R.id.resourceCatag;
+import static com.example.derek.mapsapp.R.id.spinner2;
 
 /**
  * Created by Derek on 12/6/2016.
