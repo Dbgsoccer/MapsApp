@@ -30,4 +30,7 @@ public class fullResources extends AppCompatActivity {
 
 
     }
+    void toMap(){
+
+    }
 }

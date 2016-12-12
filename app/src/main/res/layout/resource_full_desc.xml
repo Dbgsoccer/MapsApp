@@ -2,18 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:theme="@style/Animation.AppCompat.Dialog"
+    android:background="@color/colorPrimary">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="66dp"
         android:id="@+id/fullResource"
-        android:layout_weight="0.89" />
+        android:layout_weight="0.89"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:theme="@style/Base.Animation.AppCompat.Dialog" />
 
-    <Button
-        android:text="Button"
-        android:layout_width="match_parent"
-        android:layout_height="95dp"
-        android:id="@+id/fullResourceBack"
-        android:layout_weight="0.06" />
 </LinearLayout>
