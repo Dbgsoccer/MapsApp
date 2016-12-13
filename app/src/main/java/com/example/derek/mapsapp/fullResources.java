@@ -1,8 +1,12 @@
 package com.example.derek.mapsapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.identity.intents.AddressConstants;
@@ -30,7 +34,12 @@ public class fullResources extends AppCompatActivity {
 
 
     }
-    void toMap(){
-
+    void goToWeb(View view){
+        Intent intent=getIntent();
+        String webURL = intent.getStringExtra("Website");
+        Log.v("website url", webURL);
+        Uri uri = Uri.parse(webURL); // missing 'http://' will cause crashed
+        Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(newIntent);
     }
 }

@@ -113,7 +113,7 @@ public class viewMap extends FragmentActivity
     class DownloadThread extends AsyncTask<URL, Integer, String> {
         private String link = "https://spreadsheets.google.com/tq?key=1e1uR178i86TmNOslKp_Qhmz1h7fNFp8AH9R6THdRp2k";
         String result;
-        String name, desc, catag;
+        String name, desc, catag, website;
         Double lat, lon;
         String chosenCat = ""; //this is what will change based on what they choose
 
@@ -132,6 +132,7 @@ public class viewMap extends FragmentActivity
                 Double lon = loc.getLon();
                 String desc = loc.getDesc();
                 String catag = loc.getCatag();
+                String website = loc.getWebsite();
                 // Iterate through resources to look for different catagories,
                 // if a idfferent catagory is found, place it into an arroy kist which will bult up a listview
                 if (!dataCatag.contains(catag)){
@@ -163,6 +164,7 @@ public class viewMap extends FragmentActivity
                         Double lon = loc.getLon();
                         String desc = loc.getDesc();
                         String catag = loc.getCatag();
+                        String website = loc.getWebsite();
 
                         if (chosenCat.equals(catag)) {
                             mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name).snippet(desc));
@@ -247,9 +249,10 @@ public class viewMap extends FragmentActivity
                     lon = rows.getJSONObject(i).getJSONArray("c").getJSONObject(2).getDouble("v");
                     desc = rows.getJSONObject(i).getJSONArray("c").getJSONObject(3).getString("v");
                     catag = rows.getJSONObject(i).getJSONArray("c").getJSONObject(4).getString("v");
+                    website = rows.getJSONObject(i).getJSONArray("c").getJSONObject(5).getString("v");
                     Log.d("loc","info about catag: " + name);
                     //this add function isnt working now, it says locs is null
-                    locs.add(new Loc(name,lat,lon,desc,catag));
+                    locs.add(new Loc(name,lat,lon,desc,catag,website));
                     Log.d("loc","info about catag: " + desc);
 
                 }
@@ -280,9 +283,18 @@ public class viewMap extends FragmentActivity
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(getApplicationContext(), fullResources.class);
         //pack in info
+        for (int i = 0; i < locs.size(); i++) {
+            Loc loc = locs.get(i);
+            if(marker.getTitle().equals(loc.getName())){
+                intent.putExtra("Website",loc.getWebsite());
+            }
+
+        }
+
         intent.putExtra("Title",marker.getTitle());
         intent.putExtra("Address",marker.getPosition());
         intent.putExtra("Description",marker.getSnippet());
+
         //start activity
         startActivity(intent);
 
